@@ -1,0 +1,10 @@
+# IDE 配置
+.idea/
+
+# 大型数据文件
+dataset/
+dataset.zip
+
+# 开发目录
+minidev_0703/
+本机大模型进用/
