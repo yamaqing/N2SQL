@@ -144,6 +144,8 @@ def process_all_dbs(dataset_path: str, mode: str):
         mode (str): Either dev, test or train
     """
     nltk_downloads() # download nltk stop words
+    print(f"当前工作目录: {os.getcwd()}")
+    print(f".env文件是否存在: {os.path.exists('.env')}")
     databases_path = dataset_path + f"/{mode}/{mode}_databases"
    
     for db_directory in os.listdir(databases_path):

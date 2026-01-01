@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 
 # 加载环境变量
-load_dotenv()
+load_dotenv('E-SQL.env')
 
 
 def create_response(stage: str, prompt: str, model: str, max_tokens: int, temperature: float, top_p: float, n: int) -> Dict:
@@ -27,8 +27,8 @@ def create_response(stage: str, prompt: str, model: str, max_tokens: int, temper
     # 初始化客户端，支持千问模型(OpenAI兼容API)
     client = OpenAI(
         # 从环境变量中获取API密钥，支持OpenAI和千问模型
-        api_key=os.getenv("API_KEY"),
-        #base_url=os.getenv("DASHSCOPE_BASE_URL",)
+       api_key=os.getenv("API_KEY"),
+        base_url=os.getenv("DASHSCOPE_BASE_URL"), 
     )
 
     # 根据不同阶段选择对应的系统提示内容

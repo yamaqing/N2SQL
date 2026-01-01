@@ -9,8 +9,11 @@ from utils.retrieval_utils import process_all_dbs
 from typing import Dict, Union, List, Tuple
 
 def main(args):
-    load_dotenv() # load variables into os.environ
+    load_dotenv(" E-SQL.env" ) # load variables into os.environ
     create_result_files(args) # creating results directory for specific arguments
+
+    print(f"当前工作目录: {os.getcwd()}")
+    print(f".env文件是否存在1111: {os.path.exists('E-SQL.env')}")
 
     bird_sql_path = os.getenv('DB_PATH')
     args.dataset_path = bird_sql_path
@@ -31,7 +34,7 @@ def main(args):
     # Incase error you can restart the code from the point of error using following lines
     # dataset = dataset[<enter_start_question_id>: <enter_end_question_id>]
     # dataset = dataset[<enter_question_id>:]
-    dataset = dataset[1135:]
+    #dataset = dataset[1135:]
     for ind,t2s_object in enumerate(dataset):
         q_id = t2s_object["question_id"]
         if pipeline.pipeline_order == "CSG-SR":
@@ -41,7 +44,7 @@ def main(args):
         elif pipeline.pipeline_order == "SF-CSG-QE-SR":
             t2s_object_prediction = pipeline.forward_pipeline_SF_CSG_QE_SR(t2s_object)
         else:
-            raise ValueError("Wrong value for pipeline_order argument. It must be either CSG-QE-SR or CSG-SR.")
+            raise ValueError("Wr ong value for pipeline_order argument. It must be either CSG-QE-SR or CSG-SR.")
         
         # Compare predicted and ground truth sqls
         compare_results = check_correctness(t2s_object_prediction, args)
@@ -63,7 +66,7 @@ def main(args):
             file_write.close()
 
         # # add the current text2sql object to the predictions
-        # predictions.append(t2s_object_prediction)
+        predictions.append(t2s_object_prediction)
         # # writing prediction to the predictions.json file
         # with open(args.prediction_json_path, 'w') as f:
         #     json.dump(predictions, f, indent=4)  # indent=4 for pretty printing
@@ -155,7 +158,7 @@ def calculate_accuracies(predictions: List[Dict]) -> Tuple[float, List]:
             "count": 0
         }
     }
-
+    
     # check if there is difficulty key
     sample = predictions[0]
     if "difficulty" in sample:
@@ -273,7 +276,7 @@ if __name__ == '__main__':
     parser.add_argument("--mode", default='dev', type=str, help="Either dev or test.")
 
     # Model Arguments
-    parser.add_argument("--model", default="gpt-4o-mini-2024-07-18", type=str, help="LLM model name (supports OpenAI models and Qwen models, e.g., 'gpt-4o-mini', 'qwen-turbo').")
+    parser.add_argument("--model", default="qwen3-8b", type=str, help="LLM model name (supports OpenAI models and Qwen models, e.g., 'gpt-4o-mini', 'qwen-turbo').")
     parser.add_argument("--temperature", default=0.0, type=float, help="Sampling temperature between 0 to 2. It is recommended altering this or top_p but not both.")
     parser.add_argument("--top_p", default=1, type=float, help="Nucleus sampling. It is recommend altering this or temperature but not both")
     parser.add_argument("--max_tokens", default=2048, type=int, help="The maximum number of tokens that can be generated.")
